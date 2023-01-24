@@ -1,11 +1,20 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import milkData from './milk.json'
+import cors from 'cors';
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
+app.use(cors());
+
+app.use((req: Request, res: Response, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
 
 //get all
 app.get('/api/milks', (req: Request, res: Response) => {
@@ -29,11 +38,6 @@ app.get('/api/milks/:id', (req: Request, res: Response) => {
     error: 404,
     msg: 'Milk not found'
   });
-});
-
-//get all by type
-app.get('/api/milks/type/:type', (req: Request, res: Response) => {
-    res.send('Express + TypeScript Server');
 });
 
 
